@@ -26,12 +26,14 @@ namespace ApiGrup.Application.Login.Commands
         private readonly IApiDbContext _context;
         private readonly IPasswordService _passwordService;
         private readonly IConfiguration _configuration;
+        private readonly ISendMailService _sendEmail;
 
-        public LoginCommandHandler(IApiDbContext context, IPasswordService passwordService, IConfiguration configuration)
+        public LoginCommandHandler(IApiDbContext context, IPasswordService passwordService, IConfiguration configuration, ISendMailService sendMailService)
         {
             _context = context;
             _passwordService = passwordService;
             _configuration = configuration;
+            _sendEmail = sendMailService;
         }
 
         public async Task<TokenDto> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -44,9 +46,8 @@ namespace ApiGrup.Application.Login.Commands
 
             if (!_passwordService.Check(user.Password, request.Password))
             {
-                // enviar correo electronico
-
-                var result = SendMailIsNotAccess(user);
+                // send email user
+                await _sendEmail.SendMailbyWithoutAccess(user);
                 throw new UnauthorizedAccessException();
 
             }
@@ -89,28 +90,6 @@ namespace ApiGrup.Application.Login.Commands
         }
 
 
-        public async Task<Boolean> SendMailIsNotAccess(ApiUser user)
-        {
-
-            var emailOrigin = "e-cert@correo-soporte.cl";
-            var password = "test";
-            var message = "<p>Hola, detectamos que se intentó ingresar a tu cuenta, si no fuiste tú, te encargamos ingresar nuevamente al sitio y cambiar la contraseña</p>";
-
-            MailMessage oMailMessage = new MailMessage(emailOrigin, user.Username, "Detectamos un intento de acceso a tu cuenta", message);
-            oMailMessage.IsBodyHtml = true;
-
-
-            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com");
-            smtpClient.EnableSsl = true;
-            smtpClient.UseDefaultCredentials = false;
-            smtpClient.Port = 587;
-            smtpClient.Credentials = new System.Net.NetworkCredential(emailOrigin, password);
-
-            smtpClient.Send(oMailMessage);
-
-            smtpClient.Dispose();
-            
-            return  true;
-        }
+       
     }
 }
