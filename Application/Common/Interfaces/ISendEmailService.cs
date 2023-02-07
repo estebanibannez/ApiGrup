@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 
 namespace ApiGrup.Application.Common.Interfaces
 {
-    public interface ISendMailService
+    public interface ISendEmailService
     {
-       Task SendMailbyWithoutAccess(ApiUser user);
+       void SendMailbyWithoutAccess(ApiUser user);
  
     }
 }

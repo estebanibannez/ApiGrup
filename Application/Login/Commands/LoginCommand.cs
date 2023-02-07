@@ -2,7 +2,6 @@
 using MediatR;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,7 +10,7 @@ using System.Security.Claims;
 using System;
 using Microsoft.EntityFrameworkCore;
 using ApiGrup.Domain.Entities;
-using System.Net.Mail;
+
 
 namespace ApiGrup.Application.Login.Commands
 {
@@ -26,9 +25,9 @@ namespace ApiGrup.Application.Login.Commands
         private readonly IApiDbContext _context;
         private readonly IPasswordService _passwordService;
         private readonly IConfiguration _configuration;
-        private readonly ISendMailService _sendEmail;
+        private readonly ISendEmailService _sendEmail;
 
-        public LoginCommandHandler(IApiDbContext context, IPasswordService passwordService, IConfiguration configuration, ISendMailService sendMailService)
+        public LoginCommandHandler(IApiDbContext context, IPasswordService passwordService, IConfiguration configuration, ISendEmailService sendMailService)
         {
             _context = context;
             _passwordService = passwordService;
@@ -47,7 +46,7 @@ namespace ApiGrup.Application.Login.Commands
             if (!_passwordService.Check(user.Password, request.Password))
             {
                 // send email user
-                await _sendEmail.SendMailbyWithoutAccess(user);
+                 _sendEmail.SendMailbyWithoutAccess(user);
                 throw new UnauthorizedAccessException();
 
             }

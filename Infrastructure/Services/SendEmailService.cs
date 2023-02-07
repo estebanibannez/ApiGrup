@@ -1,17 +1,13 @@
 ﻿using ApiGrup.Domain.Entities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Mail;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using ApiGrup.Application.Common.Interfaces;
-using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
-namespace ApiGrup.Application.Common.Helpers
+namespace ApiGrup.Infrastructure.Services
 {
-    public class SendEmailService
+    public class SendEmailService : ISendEmailService
     {
         private readonly IConfiguration _configuration;
         public SendEmailService(IConfiguration configuration)
@@ -43,7 +39,6 @@ namespace ApiGrup.Application.Common.Helpers
             {
                 throw err;
             }
-
         }
     }
 

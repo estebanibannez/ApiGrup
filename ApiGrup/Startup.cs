@@ -1,9 +1,9 @@
 using ApiGrup.Application;
-using ApiGrup.Application.Common.Helpers;
 using ApiGrup.Application.Common.Interfaces;
 using ApiGrup.Filters;
 using ApiGrup.Infrastructure;
 using ApiGrup.Infrastructure.Persistence;
+using ApiGrup.Infrastructure.Services;
 using ApiGrup.WebUI.Services;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -40,6 +40,7 @@ namespace WebUI
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddSingleton<ICurrentUserService, CurrentUserService>();
+            services.AddSingleton<ISendEmailService, SendEmailService>();
 
             services.AddHttpContextAccessor();
 
